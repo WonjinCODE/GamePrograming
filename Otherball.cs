@@ -2,29 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OtherBall : MonoBehaviour
+public class Otherball : MonoBehaviour
 {
-    MeshRenderer mesh;
-    Material mat;
-    void Start()
+    private Rigidbody rigid;
+
+    void Awake()
     {
-        mesh = GetComponent<MeshRenderer>();
-        mat = mesh.material;
+        rigid = GetComponent<Rigidbody>();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name ==
-        "Myball") //
+        if (collision.gameObject.name == "fance")
         {
-            mat.color = new Color(0, 0, 0);
-        }
-    }
-    private void OnCollisionExit(Collision collision) // 충돌 이벤트로부터 벗어나면 white
-    {
-        if (collision.gameObject.name == "Myball")
-        {
-            mat.color = new Color(1, 1, 1);
+            // Floor 중심 (0,0,0) 방향으로 힘 계산
+            Vector3 directionToCenter = (Vector3.zero - transform.position).normalized;
+
+            // 힘의 세기 설정
+            float forcePower = 10f;
+
+            // 순간적인 힘 적용
+            rigid.AddForce(directionToCenter * forcePower, ForceMode.Impulse);
+
+            
         }
     }
 }
-    
