@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class CollisionForceApplier : MonoBehaviour
+{
+    public Rigidbody rigid;              // 충돌 대상에 붙어 있는 Rigidbody
+    public Vector3 customDirection;      // Inspector에서 지정할 힘 방향 (예: (1,1,0))
+    public float forceStrength = 10f;    // 힘의 크기
+
+    void Awake()
+    {
+        // 만약 Inspector에 할당 안 했다면, 자기 자신의 Rigidbody 가져오기
+        if (rigid == null) rigid = GetComponent<Rigidbody>();
+    }
+
+    // 충돌이 발생했을 때
+    private void OnCollisionEnter(Collision collision)
+    {
+        // 예: 특정 태그의 오브젝트와 부딪혔을 때만
+        if (collision.gameObject.CompareTag("Target"))
+        {
+            // 1) 미리 지정한 벡터 방향으로 힘 주기
+            Vector3 dir = customDirection.normalized;
+            rigid.AddForce(dir * forceStrength, ForceMode.Impulse);
+
+            // 2) 혹은 충돌 면의 노멀 방향으로 튕기고 싶다면
+            //Vector3 contactNormal = collision.contacts[0].normal;
+            //rigid.AddForce(contactNormal * forceStrength, ForceMode.Impulse);
+        }
+    }
+}
+핵심 포인트
+벡터 지정
+
+customDirection을 Inspector에서 (x,y,z) 형태로 설정하세요.
+
+.normalized로 방향만 뽑아내고, forceStrength로 세기를 곱합니다.
+
+충돌 감지
+
+OnCollisionEnter(Collision collision) 또는 Trigger 버전인 OnTriggerEnter(Collider other) 사용.
+
+collision.contacts[0].normal을 쓰면 충돌 면의 법선(normal) 방향으로도 힘을 줄 수 있어요.
+
+힘 적용
+
+rigid.AddForce(벡터 * 세기, ForceMode.Impulse)처럼 ForceMode를 골라 즉시(Impulse)·지속(Force) 등으로 설정합니다.
+
+이렇게 하면 부딪힌 순간에 원하는 벡터 방향으로 힘을 가해 오브젝트를 이동·반사시킬 수 있습니다!
