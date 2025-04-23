@@ -1,0 +1,35 @@
+using UnityEngine;
+
+public class PlayerJump : MonoBehaviour
+{
+    public float jumpPower = 5f;
+    private Rigidbody rigid;
+    private bool isGrounded = false;
+
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        // 점프 입력 받고, 땅에 닿아 있을 때만
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            isGrounded = false;  // 점프 후엔 공중 상태로
+        }
+    }
+
+    // 땅과 닿았을 때 호출 (Ground 태그를 가진 콜라이더에 닿으면)
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    // Optional: 발이 떠오르면 isGrounded = false; 로도 관리할 수 있지만
+    // 점프 직후 이미 false로 잠갔으니 생략해도 무방합니다.
+}
