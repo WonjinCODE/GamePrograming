@@ -1,0 +1,29 @@
+using UnityEngine;
+
+public class VelocityLogger : MonoBehaviour
+{
+    Rigidbody rb;
+
+    void Awake()
+    {
+        // 이 스크립트가 붙은 오브젝트의 Rigidbody 가져오기
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            Debug.LogWarning("이 오브젝트에 Rigidbody가 없습니다!");
+    }
+
+    void Update()
+    {
+        if (rb != null)
+        {
+            // 현재 속도 벡터를 가져와서 문자열로 변환해 출력
+            Vector3 vel = rb.velocity;
+            Debug.Log($"Current Velocity: {vel}");
+        }
+    }
+}
+**Awake()**에서 GetComponent<Rigidbody>()로 rb를 할당
+
+**Update()**마다 rb.velocity를 읽어서
+
+**Debug.Log()**로 콘솔에 "Current Velocity: (x, y, z)" 포맷으로 출력
